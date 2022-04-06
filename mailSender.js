@@ -19,7 +19,16 @@ exports.mailSender = async(req, res) =>{
         from: '"Cremers" <naoresponda@cremers.org.br>', // sender address
         to: "jordan.rachid@gmail.com", // list of receivers
         subject: "Novo contato via Site (Denúncia)", // Subject line
-        text: "Hello world?", // plain text body
+        text: `
+        CRM: ${req.body.cremers}
+        nome: ${req.body.nome}
+        CPF: ${req.body.cpf}
+        email: ${req.body.email}
+        telefone: ${req.body.telefone}
+        envolvidos: ${req.body.envolvidos}
+        instituicao: ${req.body.instituicao}
+        cidade:${req.body.cidade}
+              `, // plain text body
         //html: "<b>Hello world?</b>", // html body
       });
     
@@ -29,9 +38,18 @@ exports.mailSender = async(req, res) =>{
       // Preview only available when sending through an Ethereal account
       console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
       // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-      return res.status(201).send('Email enviado')
+      return res.status(201).send(req.body)
         } catch (e) {
                 console.log(e);
                 return res.status(400).json({ error: e });
             }
 };
+
+exports.tester = async(req, res) =>{
+  try {
+    return res.status(200).send('ts')
+  } catch (e) {
+    console.log(e);
+    return res.status(400).json({ error: e });
+}
+}
