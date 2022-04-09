@@ -6,38 +6,28 @@ exports.mailSender = async (req, res) => {
   try {
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
-      host: "mail.cremers.org.br",
-      port: 587,
-      secure: false, // true for 465, false for other ports
+      host: req.body.SMTPdetails.host,
+      port: req.body.SMTPdetails.port,
+      secure: req.body.SMTPdetails.secure, // true for 465, false for other ports
       auth: {
-        user: 'naoresponda@cremers.org.br', // generated ethereal user
-        pass: process.env.PASSWORD, // generated ethereal password
+        user: req.body.SMTPdetails.user, // generated ethereal user
+        pass: req.body.SMTPdetails.password, // generated ethereal password
       },
     });
 
     // send mail with defined transport object
     let info = await transporter.sendMail({
-      from: '"Cremers" <naoresponda@cremers.org.br>', // sender address
-      to: "jordan.rachid@gmail.com", // list of receivers
-      subject: "Novo contato via Site (Denúncia)", // Subject line
-      text: `
-        CRM: ${req.body.cremers}
-        nome: ${req.body.nome}
-        CPF: ${req.body.cpf}
-        email: ${req.body.email}
-        telefone: ${req.body.telefone}
-        envolvidos: ${req.body.envolvidos}
-        instituicao: ${req.body.instituicao}
-        cidade:${req.body.cidade}
-              `, // plain text body
-      //html: "<b>Hello world?</b>", // html body
-      attachments: [
+      from: req.body.from,
+      to: req.body.to,
+      subject: req.body.subject,
+      text: req.body.text,
+      html: req.body.html,
+     /* attachments: [
         { 
           filename: 'relato.pdf',
           content: base64decode(req.body.relato)
         },
-
-      ]
+      ]*/
     });
 
     console.log("Message sent: %s", info.messageId);
